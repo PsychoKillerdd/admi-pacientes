@@ -15,7 +15,3 @@ import Header from './components/Header.vue';
 import Formulario from './components/Formulario.vue';
 </script>
 
-<style lang="css" scoped>
-
-
-</style>

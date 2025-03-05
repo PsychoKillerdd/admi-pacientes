@@ -5,7 +5,7 @@ import Alerta from './Alerta.vue';
 
 const alerta = reactive({
     tipo:'',
-    mensaje:'',
+    mensaje:''
 })
 
 

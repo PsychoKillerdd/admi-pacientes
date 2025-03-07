@@ -1,38 +1,46 @@
 <script setup>
-import { reactive, ref } from 'vue';
+import { computed, reactive, ref } from 'vue';
 import Alerta from './Alerta.vue';
-
+import paciente from '../App.vue';
 
 const alerta = reactive({
     tipo:'',
     mensaje:''
 })
 
-
-
-
-
-
-const paciente = reactive({
-    nombre:'',
-    propietario:'',
-    email:'',
-    fecha:'',
-    sintomas:'',
+const emit = defineEmits(['update:nombre','update:propietario','update:email','update:alta','update:sintomas','guardar-paciente']);
+const props = defineProps({
+    nombre:{type:[String,null],required:true},
+    propietario:{type:String,required:true},
+    email:{type:String,required:true},
+    alta:{type:String,required:true},
+    sintomas:{type:String,required:true},
 })
+
 const validar = () => {
-   if(Object.values(paciente).includes('')){
+   if(Object.values(props).includes('')){
         alerta.mensaje = 'Todos los campos son obligatorios';
         alerta.tipo = 'error'
         return
     }
     else {
+
             alerta.mensaje = 'Todos los campos bien rellenados'
             alerta.tipo = 'exito'
+            emit('guardar-paciente')
+            setTimeout(() => {
+                 alerta.mensaje = '';
+                 alerta.tipo = ''
+            }, 2000);
             return
         }
 }
 
+
+const editando = computed(() => {
+    return props.id 
+
+})
 
 
 </script>
@@ -60,7 +68,9 @@ const validar = () => {
     id="mascota" 
     placeholder="Nombre de la mascota" 
     class="border px-2 w-full mt-2 placeholder-gray-200 rounded-md"
-    v-model="paciente.nombre"> 
+    :value="nombre"
+    @input="$emit('update:nombre',$event.target.value)"
+    > 
 </div>
 <div class="mb-5">
     <label class="block text-gray-700 uppercase font-bold" for="propietario">
@@ -71,7 +81,9 @@ const validar = () => {
     id="propietario" 
     placeholder="Nombre de la mascota" 
     class="border px-2 w-full mt-2 placeholder-gray-200 rounded-md"
-    v-model="paciente.propietario"> 
+    :value="propietario"
+    @input="$emit('update:propietario',$event.target.value)"
+    > 
 </div>
 <!-- TODO:SEPARACION -->
 <div class="mb-5">
@@ -83,7 +95,9 @@ const validar = () => {
     id="email" 
     placeholder="Nombre de la mascota" 
     class="border px-2 w-full mt-2 placeholder-gray-200 rounded-md"
-    v-model="paciente.email"> 
+    :value="email"
+    @input="$emit('update:email',$event.target.value)"
+    > 
 
 </div>
 <div class="mb-5">
@@ -94,7 +108,9 @@ const validar = () => {
     type="date" 
     id="fecha"  
     class="border-2 px-4 w-full mt-2 placeholder-gray-200 rounded-md"
-    v-model="paciente.fecha"> 
+    :value="alta"
+    @input="$emit('update:alta',$event.target.value)"
+    > 
 
 </div>
 <div class="mb-5">
@@ -104,13 +120,15 @@ const validar = () => {
     <textarea 
     id="sintomas" 
     placeholder="Describe los sintomas del paciente"  
-    class="h-40 px-2 border w-full mt-2 placeholder-gray-800 rounded-md" v-model="paciente.sintomas"> </textarea>
+    :value="sintomas"
+    class="h-40 px-2 border w-full mt-2 placeholder-gray-800 rounded-md" @input="$emit('update:sintomas',$event.target.value)"
+    > </textarea>
 
 
 </div>
 
 <input type="submit"
-       class="bg-indigo-600 w-full p-3 text-white uppercase font-bold hover:bg-indigo-900 transition-colors cursor-pointer " value="registrar paciente"
+       class="bg-indigo-600 w-full p-3 text-white uppercase font-bold hover:bg-indigo-900 transition-colors cursor-pointer " :value="[editando ? 'Guardar cambio' : 'Guardado el paciente']"
 >
             </form>
     </div>
